@@ -1,0 +1,416 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ctechou}[2021/01/09 v0.1]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% pakcages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{geometry}
+\RequirePackage[svgnames,table]{xcolor}
+\RequirePackage{bm}
+\RequirePackage{ifthen}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{tikz}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage[absolute]{textpos}
+\RequirePackage{fontspec}
+\RequirePackage{setspace}
+\RequirePackage{enumitem}
+\RequirePackage{varwidth}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{arydshln}
+\RequirePackage{xparse}
+\RequirePackage{xkeyval}
+\RequirePackage{everypage}
+\RequirePackage{pgfcalendar}
+\RequirePackage[calc]{datetime2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 包参数处理
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareOptionX{palette}[blank]{%
+  \csdef{techou@palette}{\csname palette@#1\endcsname}}
+\DeclareOptionX{year}[2021]{%
+  \csdef{techou@year}{#1}}
+\DeclareOptionX*{\PackageWarning{ctechou}{`\CurrentOption' ignored.}}
+\ExecuteOptionsX{palette=blank}
+\ExecuteOptionsX{year=2021}
+\ProcessOptionsX
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TiKZ settings...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetikzlibrary{calc}
+\usetikzlibrary{math}
+\usetikzlibrary{arrows}
+\usetikzlibrary{angles}
+\usetikzlibrary{quotes}
+\usetikzlibrary{calendar}
+\usetikzlibrary{intersections}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Calendar settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DTMsavedate{techoufirstday}{\techou@year-01-01}
+\tikzmath{
+  \techou@monthdays{1}=31;
+  \techou@monthdays{2}=28;
+  \techou@monthdays{3}=31;
+  \techou@monthdays{4}=30;
+  \techou@monthdays{5}=31;
+  \techou@monthdays{6}=30;
+  \techou@monthdays{7}=31;
+  \techou@monthdays{8}=31;
+  \techou@monthdays{9}=30;
+  \techou@monthdays{10}=31;
+  \techou@monthdays{11}=30;
+  \techou@monthdays{12}=31;
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page Geometry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\geometry{%
+  a4paper,%
+  landscape,%
+  left=2.0cm,%
+  right=0.1cm,%
+  bottom=0.1cm,%
+  top=0.1cm%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% hyperref
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \hypersetup{
+%   unicode=true,           % non-Latin characters in Acrobat’s bookmarks
+%   pdftoolbar=true,        % show Acrobat’s toolbar?
+%   pdfmenubar=true,        % show Acrobat’s menu?
+%   pdffitwindow=false,     % window fit to page when opened
+%   pdfstartview={FitH},    % fits the width of the page to the window
+%   pdftitle={Cheng Tan's yearly plan},
+%   pdfauthor={Cheng Tan},
+%   pdfproducer={c-tan.com},
+%   colorlinks=true,
+%   linkcolor=black
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% color palette
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\palette@blank}{
+  \definecolor{cola}{HTML}{222222}
+  \definecolor{colb}{HTML}{111111}
+  \definecolor{colc}{HTML}{000000}
+  \definecolor{cold}{HTML}{000000}
+}
+\newcommand{\palette@spring}{
+  \definecolor{cola}{HTML}{FF0000}
+  \definecolor{colb}{HTML}{7B137F}
+  \definecolor{colc}{HTML}{D37403}
+  \definecolor{cold}{HTML}{F1C500}
+}
+\techou@palette
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Specify font families                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmainfont{Helvetica}
+% \setmainfont{Times New Roman}
+\setsansfont{Helvetica}
+\setmonofont{Menlo}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set Distances
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlist[itemize]{nosep,leftmargin=*}
+\singlespacing{}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{1em}
+% textpos 专用
+\setlength{\TPHorizModule}{\paperwidth}
+\setlength{\TPVertModule}{\paperheight}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Boxes...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ========
+% todo box
+% ========
+\NewDocumentCommand{\todo}{}{%
+  \begin{tikzpicture}
+    \draw[rounded corners=2pt, line width=0.5pt] (0, 0) rectangle (0.36, 0.36);
+  \end{tikzpicture}
+}
+
+% ==========================
+% monthly calendar in a line
+% ==========================
+% parameters:
+% 1. month
+% 2. day
+% 3. # days in this month
+\NewDocumentCommand{\drawmonthline}{mmm}{%
+  \begin{minipage}[t]{0.9\linewidth}
+    \begin{tikzpicture}[x=0.7cm,y=0.7cm,every day/.style={anchor=mid}]
+      % \draw[help lines,step=1.0,green!25!black!25!white] (0, 0) grid (32, 1);
+      \clip (-1.5, -1.0) rectangle (30.5,1.5);
+      \calendar[dates=#1-#2-01 to #1-#2-last,
+      day list right,
+      day xshift=0.65cm,
+      day text={ \hyperref[page:Y#1-M\%m0-D\%d0]{\%d-}}]
+      if (Sunday) [gray!80]
+      if (Saturday) [gray!80]
+      if (equals=#1-#2-#3) {\fill[gray!15] (0,0) circle (8pt);};
+    \end{tikzpicture}
+  \end{minipage}
+}
+
+
+% =====================
+% weekly page head line
+% =====================
+\NewDocumentCommand{\drawweeklyhead}{mm}{%
+  \begin{minipage}[t]{0.9\linewidth}
+    \begin{tikzpicture}[x=0.7cm,y=0.7cm]
+      % \draw[help lines,step=1.0,green!25!black!25!white] (0, 0) grid (32, 1);
+      \clip (0, -0.5) rectangle (32,2);
+      \node[right, font=\Large] at (1,0.5) {Week #2 in \DTMmonthname{#1}};
+    \end{tikzpicture}
+  \end{minipage}
+}
+
+% ======================
+% monthly page head line
+% ======================
+\NewDocumentCommand{\drawmonthlyhead}{m}{%
+  \begin{minipage}[t]{0.9\linewidth}
+    \begin{tikzpicture}[x=0.7cm,y=0.7cm]
+      \clip (0, -0.5) rectangle (32,2);
+      \node[right, font=\huge] at (1,0.5) {\DTMmonthname{#1}};
+    \end{tikzpicture}
+  \end{minipage}
+}
+
+% ========================
+% quarterly page head line
+% ========================
+\NewDocumentCommand{\drawquarterlyhead}{m}{%
+  \begin{minipage}[t]{0.9\linewidth}
+    \begin{tikzpicture}[x=0.7cm,y=0.7cm]
+      \clip (0, -0.5) rectangle (32,2);
+      \node[right, font=\huge] at (1,0.5) {#1};
+    \end{tikzpicture}
+  \end{minipage}
+}
+
+% ==================================
+% add date and day to corner (daily)
+% ==================================
+\NewDocumentCommand{\drawdailycorner}{mmm}{%
+  \begin{textblock}{0.1}(0.85,0.03)
+    \DTMsavedate{cornertmpday}{#1-#2-#3}
+    \begin{tikzpicture}[x=2.0cm,y=2.0cm]
+      % \draw[help lines,step=.1,green!25!black!25!white] (0, 0) grid (1, 1);
+      \clip (0, 0) rectangle (1,1);
+      \fill[gray!50] (0.5, 0.75) circle (2pt);
+      \draw[line width=0.5pt] (0, 0.5) -- (1, 0.5);
+      \node[font=\large] at (0.2, 0.75) {#2};
+      \node[font=\large] at (0.8, 0.75) {#3};
+      \draw (0.5, 0.25) node[font=\large]{\DTMshortweekdayname{\DTMfetchdow{cornertmpday}}};
+    \end{tikzpicture}
+  \end{textblock}
+}
+
+% ===================================
+% add date and day to corner (weekly)
+% ===================================
+\NewDocumentCommand{\drawweeklycorner}{m}{%
+  \begin{textblock}{0.1}(0.85,0.03)
+    \begin{tikzpicture}[x=2.0cm,y=2.0cm]
+      % \draw[help lines,step=.1,green!25!black!25!white] (0, 0) grid (1, 1);
+      \clip (0, 0) rectangle (1,1);
+      \draw[rounded corners=8pt,line width=1.5pt] (0.1, 0.1) rectangle (0.9, 0.9);
+      \draw (0.5, 0.5) node[font=\Huge]{#1};
+    \end{tikzpicture}
+  \end{textblock}
+}
+
+% =================
+% add page side-bar
+% =================
+\NewDocumentCommand{\drawsidebar}{mm}{%
+  \begin{textblock}{0.1}(-0.02,0.0)
+    \begin{tikzpicture}[x=2.0cm,y=2.0cm]
+      % \draw[help lines,step=.1,green!25!black!25!white] (0, 0) grid (1, 10);
+      \clip (0, 0) rectangle (1,10);
+      \node[font=\Huge\bfseries] at (0.5, 9.35) {\hyperref[page:Y#1]{#1}};
+      % \draw[line width=0.5pt] (0, 9.0) -- (1, 9.0);
+      \fill[rounded corners=3pt,gray!25] (0.06, {(12-#2.0)*0.5+2.88}) rectangle +(0.48, 0.24);
+      \node[font=\scshape,cola!20!black!60] at (0.3, 8.5) {\hyperref[page:Y#1-M01]{JAN}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 8.0) {\hyperref[page:Y#1-M02]{FEB}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 7.5) {\hyperref[page:Y#1-M03]{MAR}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 7.0) {\hyperref[page:Y#1-M04]{APR}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 6.5) {\hyperref[page:Y#1-M05]{MAY}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 6.0) {\hyperref[page:Y#1-M06]{JUN}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 5.5) {\hyperref[page:Y#1-M07]{JUL}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 5.0) {\hyperref[page:Y#1-M08]{AUG}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 4.5) {\hyperref[page:Y#1-M09]{SEP}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 4.0) {\hyperref[page:Y#1-M10]{OCT}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 3.5) {\hyperref[page:Y#1-M11]{NOV}};
+      \node[font=\scshape,cola!20!black!60] at (0.3, 3.0) {\hyperref[page:Y#1-M12]{DEC}};
+      \node[font=\scshape,colb!20!black!40] at (0.3, 2.5) {\hyperref[page:Y#1-Q13]{Q1}};
+      \node[font=\scshape,colb!20!black!40] at (0.3, 2.0) {\hyperref[page:Y#1-Q14]{Q2}};
+      \node[font=\scshape,colb!20!black!40] at (0.3, 1.5) {\hyperref[page:Y#1-Q15]{Q3}};
+      \node[font=\scshape,colb!20!black!40] at (0.3, 1.0) {\hyperref[page:Y#1-Q16]{Q4}};
+    \end{tikzpicture}
+  \end{textblock}
+}
+
+% ===========================
+% day list in the weekly plan
+% ===========================
+\NewDocumentCommand{\drawweeklytimeline}{mmm}{%
+  \begin{tikzpicture}[x=1.0cm,y=1.0cm]
+    \clip (0.0, -0.1) rectangle (12.56,17.56);
+    % \draw[help lines,step=1.0,green!25!black!25!white] (0, 0) grid (12.6, 17.6);
+    \foreach \x in {0,...,6}
+    {
+      \DTMsavedate{weeklyheadtmpday}{#1-#2-#3+\x}
+      \node[left] at (0.9, {17.2 - \x * 2.5})
+      {\hyperref[page:Y\DTMfetchyear{weeklyheadtmpday}-M\DTMfetchmonth{weeklyheadtmpday}-D\DTMfetchday{weeklyheadtmpday}]{\DTMfetchday{weeklyheadtmpday}}};
+      \draw[line width=0.6pt] (0.2, {17.5 - \x * 2.5}) -- (12.2, {17.5 - \x * 2.5});
+      \node[left,gray!60!white] at (12., {17.2 - \x * 2.5}) {\DTMshortweekdayname{\x}};
+    }
+    \draw[line width=0.6pt] (0.2, 0) -- (12.2, 0);
+  \end{tikzpicture}
+}
+
+% ===========================
+% day list in the monthly cal
+% ===========================
+\NewDocumentCommand{\drawmonthlycal}{mmm}{%
+  \newcount\DMCmonthfirstday
+  \pgfcalendardatetojulian{#1-#2-01}{\DMCmonthfirstday}
+  \DTMsavedate{DMCmfd}{#1-#2-01}
+  \newcount\DMCmonthlastday
+  \pgfcalendardatetojulian{#1-#2-last}{\DMCmonthlastday}
+  \DTMsavedate{DMCmld}{#1-#2-last}
+  \newcount\firstdayshift
+  \pgfcalendarjuliantoweekday{\DMCmonthfirstday}{\firstdayshift}
+  \newcount\lastdayshift
+  \pgfcalendarjuliantoweekday{\DMCmonthlastday}{\lastdayshift}
+  \tikzmath{
+    \fshift=int(-\number\firstdayshift);
+    \lshift=int(6-\number\lastdayshift);
+    if \lshift == 0 then {
+      \lshift=int(7);
+    };
+  }
+  \newcount\DMCcalfirstday
+  \DTMsaveddateoffsettojulianday{DMCmfd}{\fshift}{\DMCcalfirstday}
+  \newcount\DMCcallastday
+  \DTMsaveddateoffsettojulianday{DMCmld}{\lshift}{\DMCcallastday}
+  \pgfcalendarjuliantodate{\DMCcalfirstday}{\tmpfirsty}{\tmpfirstm}{\tmpfirstd}
+  \pgfcalendarjuliantodate{\DMCcallastday}{\tmplasty}{\tmplastm}{\tmplastd}
+  \newcount\DMCcaldiff
+  \DTMsaveddatediff{DMCmld}{DMCmfd}{\DMCcaldiff}
+  \tikzmath{
+    \tmpnumweeks=int( \number\DMCcaldiff + \lshift - \fshift )/7 +1);
+    if \lshift < 7 then {
+      \tmpnumweeks=\tmpnumweeks+1;
+    };
+  }
+  \begin{tikzpicture}[x=1.0cm,y=1.0cm]
+    % \clip (-1.0, -0.1) rectangle (18,16);
+    % \draw[help lines,step=1.0,green!25!black!25!white] (-1, 0) grid (18, 16);
+    \draw[step=2.5,colb!25!black!50,line width=0.5pt] (0, 0) grid (17.5, 15);
+    \calendar[dates=\tmpfirsty-\tmpfirstm-\tmpfirstd to \tmplasty-\tmplastm-\tmplastd,
+    at={(0.8, 14.5)},
+    week list,
+    day xshift=2.5cm,
+    day yshift=2.5cm,
+    month yshift=0cm,
+    gray!50,
+    day text={ \hyperref[page:Y\%y0-M\%m0-D\%d0]{\%d-}}]
+    if (between=#1-#2-01 and #1-#2-last) [black];
+    \foreach \x in {0,...,6}
+    {
+      \node[right,gray!60!white] at ({\x * 2.5 + 0.8}, 15.3) {\DTMshortweekdayname{\x}};
+    }
+    \foreach \y [evaluate={\nweek=int( #3.0+\y-1 );}] in {1,...,\tmpnumweeks}
+    {
+      \node[left,gray!60!white] at (0, {16.2 - \y * 2.5})
+      {\hyperref[page:Y#1-W\nweek]{\nweek}};
+    }
+  \end{tikzpicture}
+}
+
+% ==============================
+% day list in the quarterly plan
+% ==============================
+\NewDocumentCommand{\drawquarterlytimeline}{m}{%
+  \renewcommand{\arraystretch}{1.5}
+  \tikzmath{
+    if #1 == 13 then{
+      \m1=01; \m2=02; \m3=03;
+    };
+    if #1 == 14 then{
+      \m1=04; \m2=05; \m3=06;
+    };
+    if #1 == 15 then{
+      \m1=07; \m2=08; \m3=09;
+    };
+    if #1 == 16 then{
+      \m1=10; \m2=11; \m3=12;
+    };
+  }
+  \begin{tabularx}{0.90\linewidth}{m{\linewidth}}
+    \hyperref[page:Y\techou@year-M\m1]{\DTMmonthname{\m1}} \\
+    \midrule[0.5pt]
+    \begin{tikzpicture}[x=1.1cm,y=1.1cm]
+      \draw[help lines,step=0.5,colb!35!black!15!white] (0, 0) grid (10.5, 4.5);
+    \end{tikzpicture}\\
+    \hyperref[page:Y\techou@year-M\m2]{\DTMmonthname{\m2}} \\
+    \midrule[0.5pt]
+    \begin{tikzpicture}[x=1.1cm,y=1.1cm]
+      \draw[help lines,step=0.5,colb!35!black!15!white] (0, 0) grid (10.5, 4.5);
+    \end{tikzpicture}\\
+    \hyperref[page:Y\techou@year-M\m3]{\DTMmonthname{\m3}} \\
+    \midrule[0.5pt]
+    \begin{tikzpicture}[x=1.1cm,y=1.1cm]
+      \draw[help lines,step=0.5,colb!35!black!15!white] (0, 0) grid (10.5, 4.5);
+    \end{tikzpicture}\\
+  \end{tabularx}
+}
+
+
+% ======
+% footer
+% ======
+\NewDocumentCommand{\drawctanfooter}{}{%
+  \begin{textblock}{0.3}(0.80,0.95)
+    \begin{tikzpicture}[x=1.0cm,y=1.0cm]
+      % \draw[help lines,step=.2,green!25!black!25!white] (0, 0) grid (2, 1);
+      % \clip (0, 0) rectangle (2,1);
+      \node[font=\scshape\footnotesize,cola!30!black!40!white] at (1, 0.5) {\copyright \, Cheng Tan \,|\, https://c-tan.com};
+    \end{tikzpicture}
+  \end{textblock}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% add copyright pic to every page                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AddEverypageHook{%
+  \drawctanfooter
+}
+
+
+\endinput
