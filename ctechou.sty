@@ -26,7 +26,7 @@
 \RequirePackage[calc]{datetime2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 包参数处理
+% package arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareOptionX{palette}[blank]{%
   \csdef{techou@palette}{\csname palette@#1\endcsname}}
@@ -53,20 +53,20 @@
 % Calendar settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \DTMsavedate{techoufirstday}{\techou@year-01-01}
-\tikzmath{
-  \techou@monthdays{1}=31;
-  \techou@monthdays{2}=28;
-  \techou@monthdays{3}=31;
-  \techou@monthdays{4}=30;
-  \techou@monthdays{5}=31;
-  \techou@monthdays{6}=30;
-  \techou@monthdays{7}=31;
-  \techou@monthdays{8}=31;
-  \techou@monthdays{9}=30;
-  \techou@monthdays{10}=31;
-  \techou@monthdays{11}=30;
-  \techou@monthdays{12}=31;
-}
+% \tikzmath{
+%   \techou@monthdays{1}=31;
+%   \techou@monthdays{2}=28;
+%   \techou@monthdays{3}=31;
+%   \techou@monthdays{4}=30;
+%   \techou@monthdays{5}=31;
+%   \techou@monthdays{6}=30;
+%   \techou@monthdays{7}=31;
+%   \techou@monthdays{8}=31;
+%   \techou@monthdays{9}=30;
+%   \techou@monthdays{10}=31;
+%   \techou@monthdays{11}=30;
+%   \techou@monthdays{12}=31;
+% }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Page Geometry
@@ -106,10 +106,10 @@
   \definecolor{cold}{HTML}{000000}
 }
 \newcommand{\palette@spring}{
-  \definecolor{cola}{HTML}{FF0000}
-  \definecolor{colb}{HTML}{7B137F}
-  \definecolor{colc}{HTML}{D37403}
-  \definecolor{cold}{HTML}{F1C500}
+  \definecolor{cola}{HTML}{533E85}
+  \definecolor{colb}{HTML}{488FB1}
+  \definecolor{colc}{HTML}{9FC3C3}
+  \definecolor{cold}{HTML}{8198AF}
 }
 \techou@palette
 
@@ -167,7 +167,7 @@
       day text={ \hyperref[page:Y#1-M\%m0-D\%d0]{\%d-}}]
       if (Sunday) [gray!80]
       if (Saturday) [gray!80]
-      if (equals=#1-#2-#3) {\fill[gray!15] (0,0) circle (8pt);};
+      if (equals=#1-#2-#3) {\fill[colb!40] (0,0) circle (8pt);};
     \end{tikzpicture}
   \end{minipage}
 }
@@ -219,7 +219,7 @@
     \begin{tikzpicture}[x=2.0cm,y=2.0cm]
       % \draw[help lines,step=.1,green!25!black!25!white] (0, 0) grid (1, 1);
       \clip (0, 0) rectangle (1,1);
-      \fill[gray!50] (0.5, 0.75) circle (2pt);
+      \fill[cola!30] (0.5, 0.75) circle (2pt);
       \draw[line width=0.5pt] (0, 0.5) -- (1, 0.5);
       \node[font=\large] at (0.2, 0.75) {#2};
       \node[font=\large] at (0.8, 0.75) {#3};
@@ -253,22 +253,22 @@
       \node[font=\Huge\bfseries] at (0.5, 9.35) {\hyperref[page:Y#1]{#1}};
       % \draw[line width=0.5pt] (0, 9.0) -- (1, 9.0);
       \fill[rounded corners=3pt,gray!25] (0.06, {(12-#2.0)*0.5+2.88}) rectangle +(0.48, 0.24);
-      \node[font=\scshape,cola!20!black!60] at (0.3, 8.5) {\hyperref[page:Y#1-M01]{JAN}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 8.0) {\hyperref[page:Y#1-M02]{FEB}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 7.5) {\hyperref[page:Y#1-M03]{MAR}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 7.0) {\hyperref[page:Y#1-M04]{APR}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 6.5) {\hyperref[page:Y#1-M05]{MAY}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 6.0) {\hyperref[page:Y#1-M06]{JUN}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 5.5) {\hyperref[page:Y#1-M07]{JUL}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 5.0) {\hyperref[page:Y#1-M08]{AUG}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 4.5) {\hyperref[page:Y#1-M09]{SEP}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 4.0) {\hyperref[page:Y#1-M10]{OCT}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 3.5) {\hyperref[page:Y#1-M11]{NOV}};
-      \node[font=\scshape,cola!20!black!60] at (0.3, 3.0) {\hyperref[page:Y#1-M12]{DEC}};
-      \node[font=\scshape,colb!20!black!40] at (0.3, 2.5) {\hyperref[page:Y#1-Q13]{Q1}};
-      \node[font=\scshape,colb!20!black!40] at (0.3, 2.0) {\hyperref[page:Y#1-Q14]{Q2}};
-      \node[font=\scshape,colb!20!black!40] at (0.3, 1.5) {\hyperref[page:Y#1-Q15]{Q3}};
-      \node[font=\scshape,colb!20!black!40] at (0.3, 1.0) {\hyperref[page:Y#1-Q16]{Q4}};
+      \node[font=\scshape,cola] at (0.3, 8.5) {\hyperref[page:Y#1-M01]{JAN}};
+      \node[font=\scshape,cola] at (0.3, 8.0) {\hyperref[page:Y#1-M02]{FEB}};
+      \node[font=\scshape,cola] at (0.3, 7.5) {\hyperref[page:Y#1-M03]{MAR}};
+      \node[font=\scshape,cola] at (0.3, 7.0) {\hyperref[page:Y#1-M04]{APR}};
+      \node[font=\scshape,cola] at (0.3, 6.5) {\hyperref[page:Y#1-M05]{MAY}};
+      \node[font=\scshape,cola] at (0.3, 6.0) {\hyperref[page:Y#1-M06]{JUN}};
+      \node[font=\scshape,cola] at (0.3, 5.5) {\hyperref[page:Y#1-M07]{JUL}};
+      \node[font=\scshape,cola] at (0.3, 5.0) {\hyperref[page:Y#1-M08]{AUG}};
+      \node[font=\scshape,cola] at (0.3, 4.5) {\hyperref[page:Y#1-M09]{SEP}};
+      \node[font=\scshape,cola] at (0.3, 4.0) {\hyperref[page:Y#1-M10]{OCT}};
+      \node[font=\scshape,cola] at (0.3, 3.5) {\hyperref[page:Y#1-M11]{NOV}};
+      \node[font=\scshape,cola] at (0.3, 3.0) {\hyperref[page:Y#1-M12]{DEC}};
+      \node[font=\scshape,colb] at (0.3, 2.5) {\hyperref[page:Y#1-Q13]{Q1}};
+      \node[font=\scshape,colb] at (0.3, 2.0) {\hyperref[page:Y#1-Q14]{Q2}};
+      \node[font=\scshape,colb] at (0.3, 1.5) {\hyperref[page:Y#1-Q15]{Q3}};
+      \node[font=\scshape,colb] at (0.3, 1.0) {\hyperref[page:Y#1-Q16]{Q4}};
     \end{tikzpicture}
   \end{textblock}
 }
@@ -330,7 +330,7 @@
   \begin{tikzpicture}[x=1.0cm,y=1.0cm]
     % \clip (-1.0, -0.1) rectangle (18,16);
     % \draw[help lines,step=1.0,green!25!black!25!white] (-1, 0) grid (18, 16);
-    \draw[step=2.5,colb!25!black!50,line width=0.5pt] (0, 0) grid (17.5, 15);
+    \draw[step=2.5,colc,line width=0.5pt] (0, 0) grid (17.5, 15);
     \calendar[dates=\tmpfirsty-\tmpfirstm-\tmpfirstd to \tmplasty-\tmplastm-\tmplastd,
     at={(0.8, 14.5)},
     week list,
@@ -375,17 +375,17 @@
     \hyperref[page:Y\techou@year-M\m1]{\DTMmonthname{\m1}} \\
     \midrule[0.5pt]
     \begin{tikzpicture}[x=1.1cm,y=1.1cm]
-      \draw[help lines,step=0.5,colb!35!black!15!white] (0, 0) grid (10.5, 4.5);
+      \draw[help lines,step=0.5,colc] (0, 0) grid (10.5, 4.5);
     \end{tikzpicture}\\
     \hyperref[page:Y\techou@year-M\m2]{\DTMmonthname{\m2}} \\
     \midrule[0.5pt]
     \begin{tikzpicture}[x=1.1cm,y=1.1cm]
-      \draw[help lines,step=0.5,colb!35!black!15!white] (0, 0) grid (10.5, 4.5);
+      \draw[help lines,step=0.5,colc] (0, 0) grid (10.5, 4.5);
     \end{tikzpicture}\\
     \hyperref[page:Y\techou@year-M\m3]{\DTMmonthname{\m3}} \\
     \midrule[0.5pt]
     \begin{tikzpicture}[x=1.1cm,y=1.1cm]
-      \draw[help lines,step=0.5,colb!35!black!15!white] (0, 0) grid (10.5, 4.5);
+      \draw[help lines,step=0.5,colc] (0, 0) grid (10.5, 4.5);
     \end{tikzpicture}\\
   \end{tabularx}
 }
@@ -399,14 +399,174 @@
     \begin{tikzpicture}[x=1.0cm,y=1.0cm]
       % \draw[help lines,step=.2,green!25!black!25!white] (0, 0) grid (2, 1);
       % \clip (0, 0) rectangle (2,1);
-      \node[font=\scshape\footnotesize,cola!30!black!40!white] at (1, 0.5) {\copyright \, Cheng Tan \,|\, https://c-tan.com};
+      \node[font=\scshape\footnotesize,cold] at (1, 0.5) {\copyright \, Cheng Tan \,|\, https://c-tan.com};
     \end{tikzpicture}
   \end{textblock}
 }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% add copyright pic to every page                                             %
+% draw pages                                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ===========
+% yearly page
+% ===========
+% parameters:
+% 1. Year
+\NewDocumentCommand{\drawyearlypage}{m}{%
+  \newpage
+  \phantomsection\label{page:Y#1}
+  \drawsidebar{#1}{100}
+  \drawquarterlyhead{A NICE YEAR!}\\
+  \begin{minipage}[t]{0.9\linewidth}
+    \begin{tikzpicture}
+      \clip (-2, 1.0) rectangle (25,-9.5);
+      % \draw[help lines,step=1,green!25!black!25!white] (0, 0) grid (25, -9);
+      \calendar[dates=#1-01-01 to #1-12-31,
+      at={(1, 0)},
+      month list,
+      month label left,
+      day xshift=1.8em,
+      month yshift=2.25em,
+      day text={ \hyperref[page:Y\%y0-M\%m0-D\%d0]{\%d-}},
+      month text=\textcolor{cola!60}{\textit{ \hyperref[page:Y\%y0-M\%m0]{\%mt} }}]
+      if (Sunday) [colb!40!black!40]
+      if (Saturday) [colb!40!black!40]
+      ;
+    \end{tikzpicture}
+  \end{minipage}\\
+  \begin{minipage}[t]{1.0\linewidth}
+    \input{./tex/yearly_tasks.tex}
+  \end{minipage}
+}
+
+\NewDocumentCommand{\drawthisyearpage}{}{%
+  \drawyearlypage{\techou@year}
+}
+
+% ==============
+% quarterly page
+% ==============
+% parameters:
+% 1. Year
+% 2. Quarter (13 - 1, 14 -2, 15 - 3, 16 - 4)
+% 3. Name
+\NewDocumentCommand{\drawquarterlypage}{mmm}{%
+  \newpage
+  \phantomsection\label{page:Y#1-Q#2}
+  \drawsidebar{#1}{#2}
+  \drawquarterlyhead{#3}\\
+  \begin{minipage}[t]{0.5\linewidth}
+    \drawquarterlytimeline{#2}
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\linewidth}
+    \input{./tex/quarterly_tasks.tex}\\
+  \end{minipage}
+}
+
+\NewDocumentCommand{\drawfourseasonpage}{}{%
+  \drawquarterlypage{\techou@year}{13}{Quarter 1}
+  \drawquarterlypage{\techou@year}{14}{Quarter 2}
+  \drawquarterlypage{\techou@year}{15}{Quarter 3}
+  \drawquarterlypage{\techou@year}{16}{Quarter 4}
+}
+
+% =============
+% monthly pages
+% =============
+% parameters:
+% 1. Year
+% 2. Month
+% 3. # first week
+\NewDocumentCommand{\drawmonthlypage}{mmm}{%
+  \newpage
+  \phantomsection\label{page:Y#1-M#2}
+  \drawsidebar{#1}{#2}
+  \drawmonthlyhead{#2}\\
+  \begin{minipage}[t]{0.70\linewidth}
+    \begin{tabularx}{0.95\linewidth}{m{\linewidth}}
+      \drawmonthlycal{#1}{#2}{#3}
+    \end{tabularx}\\
+  \end{minipage}%
+  \begin{minipage}[t]{0.25\linewidth}
+    \input{./tex/monthly_tasks.tex}\\
+  \end{minipage}
+}
+
+% ============
+% weekly pages
+% ============
+% parameters:
+% 1. Year
+% 2. Month
+% 3. Day
+% 4. Week in this month
+% 5. Week in this year
+\NewDocumentCommand{\drawweeklypage}{mmmmm}{%
+  \newpage
+  \phantomsection\label{page:Y#1-W#5}
+  \drawsidebar{#1}{#2}
+  \drawweeklyhead{#2}{#4}
+  \drawweeklycorner{#5}
+  \begin{minipage}[t]{0.5\linewidth}
+    \begin{tabularx}{0.95\linewidth}{m{\linewidth}}
+      \drawweeklytimeline{#1}{#2}{#3}
+    \end{tabularx}
+  \end{minipage}%
+  \begin{minipage}[t]{0.45\linewidth}
+    \input{./tex/weekly_tasks.tex}
+  \end{minipage}
+}
+
+% ===========
+% daily pages
+% ===========
+% parameters:
+% 1. Year
+% 2. Month
+% 3. Date
+\NewDocumentCommand{\drawdailypage}{mmm}{%
+  \newpage
+  \phantomsection\label{page:Y#1-M#2-D#3}
+  \drawsidebar{#1}{#2}
+  \drawmonthline{#1}{#2}{#3}
+  \drawdailycorner{#1}{#2}{#3}
+  \begin{minipage}[t]{0.5\linewidth}
+    \input{./tex/daily_time_table.tex}
+  \end{minipage}%
+  \begin{minipage}[t]{0.45\linewidth}
+    \input{./tex/daily_tasks.tex}
+  \end{minipage}\\
+}
+
+\NewDocumentCommand{\drawweekanddaypage}{mm}{%
+  \newcount\mycnt
+  \DTMsaveddatetojulianday{techoufirstday}{\mycnt}
+
+  \tikzmath{\tmpW=int(0);}
+  \foreach \i in {#1,...,#2} {
+    \advance\mycnt by \i
+    \pgfcalendarjuliantodate{\mycnt}{\tmpy}{\tmpm}{\tmpd}
+    \pgfcalendarifdate{\tmpy-\tmpm-\tmpd}{day of month=1}{
+      \tikzmath{
+        \tmpW=int((\i + \DTMfetchdow{techoufirstday})/ 7);
+      }
+      \drawmonthlypage{\tmpy}{\tmpm}{\tmpW}
+    }{}
+    \pgfcalendarifdate{\tmpy-\tmpm-\tmpd}{Monday}{
+      \tikzmath{
+        \tmpW=int(\i / 7 + 1);
+        \tmpw=int(int{\tmpd.0} / 7 + 1);
+      }
+      \drawweeklypage{\tmpy}{\tmpm}{\tmpd}{\tmpw}{\tmpW}
+    }{}
+    \drawdailypage{\tmpy}{\tmpm}{\tmpd}
+  }
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% add copyright info to every page                                            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \AddEverypageHook{%
   \drawctanfooter
