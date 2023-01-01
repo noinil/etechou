@@ -1,5 +1,5 @@
 # variables
-TEXFILE = techou2022
+TEXFILE = techou2023
 COMPILE = latexmk 
 RM = rm -rf
 
